@@ -1,0 +1,885 @@
+/* Stock Analysis Tool - Styling */
+
+:root {
+  /* Premium Dark Palette */
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-elevated: #1a1a27;
+  --bg-card: #1f1f2e;
+  
+  /* Accent Colors */
+  --accent-gold: #fbbf24;
+  --accent-emerald: #10b981;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #a855f7;
+  
+  /* Status Colors */
+  --profit: #10b981;
+  --loss: #ef4444;
+  --neutral: #64748b;
+  
+  /* Text */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  /* Borders & Shadows */
+  --border-subtle: rgba(148, 163, 184, 0.1);
+  --glow-gold: 0 0 20px rgba(251, 191, 36, 0.3);
+  --glow-emerald: 0 0 20px rgba(16, 185, 129, 0.3);
+  --shadow-elevated: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ========================================
+   PARTICLE BACKGROUND ANIMATION
+   ======================================== */
+.app-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 50%),
+    var(--bg-primary);
+}
+
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: float 20s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(20px, -20px); }
+  50% { transform: translate(-20px, 20px); }
+  75% { transform: translate(20px, 20px); }
+}
+
+/* ========================================
+   CUSTOM CURSOR (Data Precision Mode)
+   ======================================== */
+body {
+  cursor: none;
+}
+
+.custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--accent-gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transition: transform 0.1s ease;
+}
+
+.custom-cursor::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1px;
+  height: 100%;
+  background: var(--accent-gold);
+}
+
+.custom-cursor::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 1px;
+  background: var(--accent-gold);
+}
+
+.custom-cursor.active {
+  transform: scale(1.5);
+  border-color: var(--accent-emerald);
+}
+
+/* ========================================
+   PREMIUM HEADER - Trading Floor Style
+   ======================================== */
+.premium-header {
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-elevated));
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1.5rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(20px);
+}
+
+.header-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
+  align-items: center;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-emerald));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: var(--bg-primary);
+  box-shadow: var(--glow-gold);
+}
+
+.logo-text h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-emerald));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.logo-text p {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Live Market Stats in Header */
+.market-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 0 2rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-value.positive { color: var(--profit); }
+.stat-value.negative { color: var(--loss); }
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.action-btn {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-btn:hover {
+  background: var(--bg-card);
+  border-color: var(--accent-gold);
+  box-shadow: var(--glow-gold);
+  transform: translateY(-2px);
+}
+
+.action-btn.premium {
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-emerald));
+  border: none;
+  color: var(--bg-primary);
+  font-weight: 700;
+}
+
+/* ========================================
+   LIVE TICKER - Bloomberg Style
+   ======================================== */
+.premium-ticker {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1rem 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.ticker-track {
+  display: flex;
+  animation: tickerScroll 40s linear infinite;
+}
+
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-stock {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 3rem;
+  border-right: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+.ticker-symbol {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.ticker-price {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.ticker-change {
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.ticker-change.up {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--profit);
+}
+
+.ticker-change.down {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--loss);
+}
+
+/* Sparkline in Ticker */
+.ticker-sparkline {
+  width: 60px;
+  height: 20px;
+}
+
+/* ========================================
+   3D TILT CARDS
+   ======================================== */
+.tilt-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tilt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tilt-card:hover {
+  transform: rotateX(5deg) rotateY(-5deg) translateY(-10px);
+  box-shadow: var(--shadow-elevated);
+  border-color: var(--accent-gold);
+}
+
+.tilt-card:hover::before {
+  opacity: 1;
+}
+
+/* Holographic Effect */
+.tilt-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(251, 191, 36, 0.05),
+    transparent
+  );
+  transform: rotate(45deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.tilt-card:hover::after {
+  opacity: 1;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: rotate(45deg) translateX(-100%); }
+  100% { transform: rotate(45deg) translateX(100%); }
+}
+
+/* ========================================
+   HEAT MAP VISUALIZATION
+   ======================================== */
+.heat-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.heat-cell {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.heat-cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  filter: brightness(1.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.heat-cell:hover::before {
+  opacity: 1;
+}
+
+.heat-cell.profit-high {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.heat-cell.profit-low {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.heat-cell.loss-high {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.heat-cell.loss-low {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.heat-cell:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.heat-symbol {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.heat-change {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* ========================================
+   PREMIUM SEARCH - Glowing Focus
+   ======================================== */
+.premium-search {
+  position: relative;
+  margin: 2rem 0;
+}
+
+.search-container {
+  background: var(--bg-card);
+  border: 2px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+  border-color: var(--accent-gold);
+  box-shadow: var(--glow-gold), inset 0 0 20px rgba(251, 191, 36, 0.05);
+}
+
+.search-icon {
+  color: var(--accent-gold);
+  width: 24px;
+  height: 24px;
+}
+
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-button {
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-emerald));
+  border: none;
+  color: var(--bg-primary);
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.search-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-gold);
+}
+
+.search-button:active {
+  transform: translateY(0);
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.quick-chip {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.quick-chip:hover {
+  background: var(--bg-card);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   SPLIT SCREEN COMPARISON
+   ======================================== */
+.split-screen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.split-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+}
+
+.split-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-emerald));
+  border-radius: 16px 16px 0 0;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.panel-symbol {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.panel-price {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-emerald));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ========================================
+   LIVE SPARKLINES
+   ======================================== */
+.sparkline-container {
+  height: 40px;
+  margin: 1rem 0;
+}
+
+.sparkline {
+  width: 100%;
+  height: 100%;
+}
+
+.sparkline-path {
+  fill: none;
+  stroke-width: 2;
+}
+
+.sparkline-path.positive {
+  stroke: var(--profit);
+  filter: drop-shadow(0 0 4px var(--profit));
+}
+
+.sparkline-path.negative {
+  stroke: var(--loss);
+  filter: drop-shadow(0 0 4px var(--loss));
+}
+
+/* ========================================
+   PREMIUM DATA GRID
+   ======================================== */
+.data-grid {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.grid-header {
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grid-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.grid-filter {
+  display: flex;
+  gap: 1rem;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.filter-btn.active {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+.filter-btn:hover:not(.active) {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.grid-table th {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  text-align: left;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.grid-table td {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.grid-table tr:hover {
+  background: rgba(251, 191, 36, 0.03);
+}
+
+.table-symbol {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.table-change {
+  font-weight: 700;
+}
+
+.table-change.positive { color: var(--profit); }
+.table-change.negative { color: var(--loss); }
+
+/* ========================================
+   CONFETTI ANIMATION
+   ======================================== */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--accent-gold);
+  animation: confettiFall 3s ease-out forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* ========================================
+   PREMIUM TOAST NOTIFICATIONS
+   ======================================== */
+.toast-stack {
+  position: fixed;
+  top: 100px;
+  right: 2rem;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.premium-toast {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-width: 350px;
+  box-shadow: var(--shadow-elevated);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toast.success { border-left: 3px solid var(--profit); }
+.toast.error { border-left: 3px solid var(--loss); }
+
+.toast-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.toast.success .toast-icon {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--profit);
+}
+
+.toast.error .toast-icon {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--loss);
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.toast-message {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ========================================
+   PARALLAX SECTIONS
+   ======================================== */
+.parallax-section {
+  position: relative;
+  margin: 4rem 0;
+  transform-style: preserve-3d;
+}
+
+.parallax-bg {
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: radial-gradient(circle at center, rgba(251, 191, 36, 0.05), transparent);
+  transform: translateZ(-1px) scale(1.1);
+  z-index: -1;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 1024px) {
+  .split-screen {
+    grid-template-columns: 1fr;
+  }
+  
+  .header-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .market-stats {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .heat-map {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+  
+  .premium-header {
+    padding: 1rem;
+  }
+  
+  body {
+    cursor: auto;
+  }
+  
+  .custom-cursor {
+    display: none;
+  }
+}
