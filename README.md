@@ -63,18 +63,18 @@ AI-powered stock analysis platform featuring real-time market data, technical in
 * stock-analysis-tool/
   * backend/
     * routes/
-      * stocks.js - Stock quote, chart, indicators endpoints
-      * watchlist.js - Watchlist CRUD operations
-      * portfolio.js - Portfolio tracking
+      *    stocks.js - Stock quote, chart, indicators endpoints
+      *    watchlist.js - Watchlist CRUD operations
+      *    portfolio.js - Portfolio tracking
     * services/
-      * alphaVantageService.js - Alpha Vantage API integration
-      * recommendationEngine.js - AI recommendation logic (RSI, MACD, SMA)
+      *    alphaVantageService.js - Alpha Vantage API integration
+      *    recommendationEngine.js - AI recommendation logic (RSI, MACD, SMA)
    * config/
-     * db.js - MongoDB connection
+     *    db.js - MongoDB connection
    * models/
-     * Watchlist.js - Watchlist schema
-     * Portfolio.js - Portfolio schema
-  * server.js - Express server
+     *    Watchlist.js - Watchlist schema
+     *    Portfolio.js - Portfolio schema
+  *   server.js - Express server
   * package.json
   
  * frontend/
@@ -287,28 +287,29 @@ This project demonstrates proficiency in:
 MIT License - Feel free to use this project for learning and portfolio purposes.
 
 ## Author
-Valerie Dawson
-Full-Stack Developer | Cloud Engineer | Computer Science Graduate
+### Valerie Dawson
+### Full-Stack Developer | Cloud Engineer | Computer Science Graduate
 
-Portfolio: https://portfolio-jk0ukypza-rubysage20s-projects.vercel.app/
-LinkedIn: https://linkedin.com/in/valerie-dawson-se
-GitHub: https://github.com/Rubysage20
-Email: Valeriedawson513@gmail.com
-
-
- Acknowledgments
-
-Alpha Vantage - Stock market data API
-React Team - Amazing frontend framework
-Recharts - Beautiful data visualization library
-MongoDB - Flexible NoSQL database
-Vercel & Railway - Seamless deployment platforms
+### Portfolio: https://portfolio-jk0ukypza-rubysage20s-projects.vercel.app/
+### LinkedIn: https://linkedin.com/in/valerie-dawson-se
+### GitHub: https://github.com/Rubysage20
+### Email: Valeriedawson513@gmail.com
 
 
-Notes
+ ### Acknowledgments
+
+* Alpha Vantage - Stock market data API
+* React Team - Amazing frontend framework
+* Recharts - Beautiful data visualization library
+* MongoDB - Flexible NoSQL database
+* Vercel & Railway - Seamless deployment platforms
+
+
+### Notes
 This is a portfolio project demonstrating full-stack development skills. The demo version uses test data for reliability, while the complete API integration code showcases production-ready development practices including error handling, rate limiting, and progressive loading strategies.
-For questions or collaboration opportunities, feel free to reach out!
 
-⭐ Star this repo if you found it helpful!
-🐛 Found a bug? Open an issue!
-💡 Have suggestions? Create a pull request!
+#### For questions or collaboration opportunities, feel free to reach out!
+
+* Star this repo if you found it helpful!
+* Found a bug? Open an issue!
+* Have suggestions? Create a pull request!
