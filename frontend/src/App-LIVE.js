@@ -1,5 +1,5 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import axios from 'axios';
 import {
   AreaChart, Area, ResponsiveContainer
 } from 'recharts';
@@ -8,142 +8,7 @@ import {
 } from 'lucide-react';
 import './App.css';
 
-// ========================================
-// DEMO DATA GENERATOR
-// ========================================
-const DEMO_STOCKS = {
-  'AAPL': { name: 'Apple Inc.', price: 185.50, change: 2.35, volume: 52400000 },
-  'MSFT': { name: 'Microsoft Corp.', price: 380.25, change: -0.85, volume: 28900000 },
-  'GOOGL': { name: 'Alphabet Inc.', price: 140.75, change: 1.50, volume: 31200000 },
-  'AMZN': { name: 'Amazon.com Inc.', price: 155.30, change: 3.20, volume: 45600000 },
-  'TSLA': { name: 'Tesla Inc.', price: 242.80, change: -2.10, volume: 98700000 },
-  'META': { name: 'Meta Platforms', price: 355.40, change: 1.85, volume: 19800000 },
-  'NVDA': { name: 'NVIDIA Corp.', price: 495.60, change: 5.40, volume: 42300000 },
-  'NFLX': { name: 'Netflix Inc.', price: 475.20, change: -1.30, volume: 8900000 },
-  'AMD': { name: 'AMD Inc.', price: 142.35, change: 3.15, volume: 52100000 },
-  'INTC': { name: 'Intel Corp.', price: 43.20, change: -0.95, volume: 38700000 },
-  'F': { name: 'Ford Motor Co.', price: 12.45, change: 1.20, volume: 67800000 },
-  'WMT': { name: 'Walmart Inc.', price: 158.90, change: 0.45, volume: 7200000 }
-};
-
-function generateChartData(basePrice, days = 30) {
-  const data = [];
-  let price = basePrice;
-  const today = new Date();
-  
-  for (let i = days; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
-    
-    // Realistic price movement
-    const change = (Math.random() - 0.5) * (basePrice * 0.03);
-    price = Math.max(price + change, basePrice * 0.85);
-    
-    data.push({
-      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      close: parseFloat(price.toFixed(2)),
-      open: parseFloat((price + Math.random() * 2 - 1).toFixed(2)),
-      high: parseFloat((price + Math.random() * 3).toFixed(2)),
-      low: parseFloat((price - Math.random() * 3).toFixed(2))
-    });
-  }
-  
-  return data;
-}
-
-function generateRecommendation(symbol, price, change) {
-  const rsi = 30 + Math.random() * 40; // 30-70
-  const macd = (Math.random() - 0.5) * 10;
-  const signal = macd - (Math.random() - 0.5) * 2;
-  
-  // Calculate recommendation score
-  let score = 0;
-  const bullishSignals = [];
-  const bearishSignals = [];
-  
-  // RSI analysis
-  if (rsi < 30) {
-    score += 2;
-    bullishSignals.push('RSI indicates oversold conditions (strong buy signal)');
-  } else if (rsi < 40) {
-    score += 1;
-    bullishSignals.push('RSI approaching oversold territory');
-  } else if (rsi > 70) {
-    score -= 2;
-    bearishSignals.push('RSI indicates overbought conditions (sell signal)');
-  } else if (rsi > 60) {
-    score -= 1;
-    bearishSignals.push('RSI approaching overbought territory');
-  }
-  
-  // MACD analysis
-  if (macd > signal) {
-    score += 2;
-    bullishSignals.push('MACD crossed above signal line (bullish)');
-  } else {
-    score -= 2;
-    bearishSignals.push('MACD below signal line (bearish)');
-  }
-  
-  // Price trend
-  if (change > 2) {
-    score += 1;
-    bullishSignals.push('Strong upward price momentum');
-  } else if (change < -2) {
-    score -= 1;
-    bearishSignals.push('Downward price pressure');
-  }
-  
-  // Determine recommendation
-  let action, color, description;
-  if (score >= 4) {
-    action = 'STRONG BUY';
-    color = '#10b981';
-    description = 'Multiple technical indicators show strong bullish signals. Excellent entry point.';
-  } else if (score >= 2) {
-    action = 'BUY';
-    color = '#22c55e';
-    description = 'Technical analysis suggests positive momentum. Good buying opportunity.';
-  } else if (score >= 0) {
-    action = 'HOLD';
-    color = '#f59e0b';
-    description = 'Mixed signals. Current position holders should maintain, new buyers should wait.';
-  } else if (score >= -2) {
-    action = 'SELL';
-    color = '#ef4444';
-    description = 'Technical indicators suggest caution. Consider taking profits.';
-  } else {
-    action = 'STRONG SELL';
-    color = '#dc2626';
-    description = 'Multiple bearish signals detected. Consider exiting position.';
-  }
-  
-  return {
-    recommendation: { action, color, description },
-    indicators: {
-      rsi: {
-        value: rsi,
-        signal: rsi < 30 ? 'Oversold' : rsi > 70 ? 'Overbought' : 'Neutral'
-      },
-      macd: {
-        macd: parseFloat(macd.toFixed(2)),
-        signal: parseFloat(signal.toFixed(2)),
-        interpretation: {
-          signal: macd > signal ? 'Bullish' : 'Bearish',
-          strength: Math.abs(macd - signal) > 2 ? 'Strong' : 'Moderate'
-        }
-      },
-      trend: {
-        type: change > 1 ? 'Uptrend' : change < -1 ? 'Downtrend' : 'Sideways',
-        strength: Math.abs(change) > 2 ? 'Strong' : 'Moderate'
-      }
-    },
-    analysis: {
-      bullishSignals,
-      bearishSignals
-    }
-  };
-}
+const API_URL = 'https://stockanalysistool-production.up.railway.app/api';
 
 // Global timers for cancellation
 let chartTimeout = null;
@@ -608,46 +473,74 @@ function App() {
     setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
 
-  // Initialize ticker and heat map with DEMO data
+  // Initialize ticker and heat map with LIVE data
   useEffect(() => {
-    console.log('🎨 Loading DEMO market data (no API calls)...');
+    const popularStocks = ['AAPL', 'MSFT', 'GOOGL', 'TSLA'];
     
-    const demoStocks = ['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'NVDA', 'META', 'AMZN', 'NFLX'];
-    
-    const stockData = demoStocks.map(symbol => {
-      const stock = DEMO_STOCKS[symbol];
-      return {
-        symbol,
-        price: stock.price,
-        change: stock.change,
-        data: Array.from({ length: 20 }, (_, i) => 
-          stock.price + Math.sin(i / 3) * 10 + Math.random() * 5 - 2.5
-        )
-      };
-    });
-    
-    setTickerStocks(stockData);
-    setHeatMapData(stockData);
-    
-    console.log('✅ Demo data loaded:', stockData.length, 'stocks');
-    showToast('Demo mode - All features available!', 'success');
+    const fetchMarketData = async () => {
+      console.log('🔍 Loading LIVE market data...');
+      showToast('Loading live market data...');
+      
+      const validStocks = [];
+      
+      for (let i = 0; i < popularStocks.length; i++) {
+        const symbol = popularStocks[i];
+        
+        try {
+          if (i > 0) {
+            console.log(`⏳ Waiting 13 seconds before loading ${symbol}...`);
+            await new Promise(resolve => setTimeout(resolve, 13000));
+          }
+          
+          console.log(`📊 Loading ${symbol}...`);
+          const res = await axios.get(`${API_URL}/stocks/quote/${symbol}`);
+          
+          const stockData = {
+            symbol: res.data.symbol,
+            price: res.data.price,
+            change: parseFloat(res.data.changePercent.replace('%', '')),
+            data: Array.from({ length: 20 }, () => res.data.price + Math.random() * 10 - 5)
+          };
+          
+          validStocks.push(stockData);
+          setTickerStocks([...validStocks]);
+          setHeatMapData([...validStocks]);
+          
+          console.log(`✅ Loaded ${symbol}: $${res.data.price}`);
+          showToast(`Loaded ${symbol} - ${validStocks.length}/${popularStocks.length}`);
+          
+        } catch (err) {
+          console.error(`❌ Error loading ${symbol}:`, err.response?.data?.error || err.message);
+          
+          if (err.response?.data?.error?.includes('rate limit')) {
+            console.log('⏸️ Rate limit hit - stopping early');
+            showToast('API rate limit reached. Showing partial data.', 'error');
+            break;
+          }
+        }
+      }
+      
+      console.log(`🎉 Finished loading ${validStocks.length} stocks with LIVE data`);
+    };
+
+    fetchMarketData();
   }, [showToast]);
 
-  // Search stock with DEMO data (instant, no delays!)
+  // Search stock with timer cancellation
   const handleSearch = async (e, symbol = null) => {
     if (e) e.preventDefault();
-    const searchSymbol = (symbol || searchTerm).toUpperCase();
+    const searchSymbol = symbol || searchTerm;
     if (!searchSymbol.trim()) return;
 
-    // Check if stock exists
-    if (!DEMO_STOCKS[searchSymbol]) {
-      showToast(`Stock "${searchSymbol}" not found. Try: AAPL, MSFT, TSLA, GOOGL, AMZN, META, NVDA, NFLX, AMD, INTC, F, WMT`, 'error');
-      return;
+    // CANCEL any pending background loads
+    if (chartTimeout) {
+      clearTimeout(chartTimeout);
+      chartTimeout = null;
     }
-
-    // CANCEL any pending timers
-    if (chartTimeout) clearTimeout(chartTimeout);
-    if (recommendationTimeout) clearTimeout(recommendationTimeout);
+    if (recommendationTimeout) {
+      clearTimeout(recommendationTimeout);
+      recommendationTimeout = null;
+    }
 
     setLoading(true);
     setStockData(null);
@@ -656,73 +549,88 @@ function App() {
     setLoadingChart(true);
     setLoadingRecommendation(true);
 
-    console.log(`🔍 Loading ${searchSymbol} (DEMO)...`);
-    
-    // Simulate loading delay for realism
-    setTimeout(() => {
-      const stock = DEMO_STOCKS[searchSymbol];
-      const quote = {
-        symbol: searchSymbol,
-        price: stock.price,
-        change: stock.change,
-        changePercent: `${stock.change > 0 ? '+' : ''}${stock.change.toFixed(2)}%`,
-        open: stock.price - Math.random() * 2,
-        high: stock.price + Math.random() * 3,
-        low: stock.price - Math.random() * 3,
-        volume: stock.volume,
-        latestTradingDay: new Date().toISOString().split('T')[0]
-      };
+    try {
+      console.log(`🔍 Searching for ${searchSymbol}...`);
       
-      setStockData(quote);
-      setSelectedStock(searchSymbol);
+      // STEP 1: Load quote (no delay)
+      const quoteRes = await axios.get(`${API_URL}/stocks/quote/${searchSymbol}`);
+      setStockData(quoteRes.data);
+      setSelectedStock(searchSymbol.toUpperCase());
       setLoading(false);
       showToast(`Loaded ${searchSymbol}!`);
       
-      // Load chart after 1 second (realistic feel)
-      chartTimeout = setTimeout(() => {
-        const chart = generateChartData(stock.price, 30);
-        setChartData(chart);
-        setLoadingChart(false);
-        showToast('Chart loaded!');
-        
-        // Load recommendation after another second
-        recommendationTimeout = setTimeout(() => {
-          const rec = generateRecommendation(searchSymbol, stock.price, stock.change);
-          setRecommendation(rec);
-          setLoadingRecommendation(false);
+      // STEP 2: Load chart in background (13 sec delay)
+      chartTimeout = setTimeout(async () => {
+        try {
+          console.log(`📊 Loading chart for ${searchSymbol}...`);
+          const chartRes = await axios.get(`${API_URL}/stocks/chart/${searchSymbol}`);
+          setChartData(chartRes.data.slice(-30));
+          setLoadingChart(false);
+          showToast('Chart loaded!');
           
-          if (rec.recommendation.action.includes('BUY')) {
-            setConfettiTrigger(prev => prev + 1);
-          }
+          // STEP 3: Load recommendation (another 13 sec delay)
+          recommendationTimeout = setTimeout(async () => {
+            try {
+              console.log(`🤖 Loading AI analysis for ${searchSymbol}...`);
+              const recRes = await axios.get(`${API_URL}/stocks/recommendation/${searchSymbol}`);
+              setRecommendation(recRes.data);
+              setLoadingRecommendation(false);
+              
+              if (recRes.data.recommendation.action.includes('BUY')) {
+                setConfettiTrigger(prev => prev + 1);
+              }
+              
+              showToast('AI analysis complete!', 'success');
+            } catch (err) {
+              console.error('Recommendation error:', err.response?.data?.error || err.message);
+              setLoadingRecommendation(false);
+              showToast('Could not load AI recommendation (rate limit)', 'error');
+            }
+          }, 13000);
           
-          showToast('AI analysis complete!', 'success');
-        }, 1000);
-      }, 1000);
-    }, 500);
+        } catch (err) {
+          console.error('Chart error:', err.response?.data?.error || err.message);
+          setLoadingChart(false);
+          showToast('Could not load chart (rate limit)', 'error');
+        }
+      }, 13000);
+      
+    } catch (err) {
+      setLoading(false);
+      setLoadingChart(false);
+      setLoadingRecommendation(false);
+      console.error('Quote error:', err);
+      
+      const errorMsg = err.response?.data?.error || err.message;
+      
+      if (errorMsg.includes('Invalid symbol') || errorMsg.includes('no data available')) {
+        showToast(`Stock symbol "${searchSymbol}" not found`, 'error');
+      } else if (errorMsg.includes('rate limit')) {
+        showToast('API rate limit reached. Wait 1 minute.', 'error');
+      } else {
+        showToast('Error loading stock', 'error');
+      }
+    }
   };
 
   // Add comparison stock
   const handleAddComparison = async (symbol) => {
-    const upperSymbol = symbol.toUpperCase();
-    
-    if (!DEMO_STOCKS[upperSymbol]) {
-      showToast(`Stock "${upperSymbol}" not found`, 'error');
-      return;
-    }
+    try {
+      const [quoteRes, chartRes] = await Promise.all([
+        axios.get(`${API_URL}/stocks/quote/${symbol}`),
+        axios.get(`${API_URL}/stocks/chart/${symbol}`)
+      ]);
 
-    const stock = DEMO_STOCKS[upperSymbol];
-    
-    setComparisonStock(upperSymbol);
-    setComparisonData({
-      symbol: upperSymbol,
-      price: stock.price,
-      change: stock.change,
-      changePercent: `${stock.change > 0 ? '+' : ''}${stock.change.toFixed(2)}%`,
-      volume: stock.volume,
-      chartData: generateChartData(stock.price, 30)
-    });
-    
-    showToast(`Added ${upperSymbol} for comparison!`);
+      setComparisonStock(symbol);
+      setComparisonData({
+        ...quoteRes.data,
+        chartData: chartRes.data.slice(-30)
+      });
+      
+      showToast(`Added ${symbol} for comparison!`);
+    } catch (err) {
+      showToast('Error loading comparison stock', 'error');
+    }
   };
 
   return (
@@ -821,19 +729,6 @@ function App() {
 
       {/* Main Content */}
       <main style={{ maxWidth: '1600px', margin: '0 auto', padding: '2rem' }}>
-        {/* Demo Mode Banner */}
-        <div style={{
-          background: 'linear-gradient(135deg, var(--accent-gold), var(--accent-emerald))',
-          padding: '1rem 2rem',
-          borderRadius: '12px',
-          marginBottom: '2rem',
-          textAlign: 'center',
-          color: 'var(--bg-primary)',
-          fontWeight: '700'
-        }}>
-          🎨 DEMO MODE - All features work instantly with no API limits!
-        </div>
-
         {/* Premium Search */}
         <div className="premium-search">
           <form onSubmit={handleSearch} className="search-container">
@@ -841,7 +736,7 @@ function App() {
             <input
               type="text"
               className="search-input"
-              placeholder="Enter stock symbol (AAPL, MSFT, TSLA, GOOGL, AMZN, META, NVDA, NFLX)..."
+              placeholder="Enter stock symbol (AAPL, MSFT, TSLA)..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value.toUpperCase())}
             />
@@ -939,8 +834,8 @@ function App() {
                 {!comparisonStock && (
                   <button
                     onClick={() => {
-                      const symbol = prompt('Enter stock symbol to compare (AAPL, MSFT, TSLA, GOOGL, AMZN, META, NVDA, NFLX, AMD, INTC, F, WMT):');
-                      if (symbol) handleAddComparison(symbol);
+                      const symbol = prompt('Enter stock symbol to compare:');
+                      if (symbol) handleAddComparison(symbol.toUpperCase());
                     }}
                     style={{
                       marginTop: '1rem',
@@ -950,16 +845,7 @@ function App() {
                       padding: '0.8rem 1.5rem',
                       borderRadius: '8px',
                       cursor: 'pointer',
-                      width: '100%',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.background = 'var(--bg-card)';
-                      e.target.style.borderColor = 'var(--accent-gold)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.background = 'var(--bg-elevated)';
-                      e.target.style.borderColor = 'var(--border-subtle)';
+                      width: '100%'
                     }}
                   >
                     + Add Comparison
@@ -1023,11 +909,8 @@ function App() {
                       padding: '0.8rem 1.5rem',
                       borderRadius: '8px',
                       cursor: 'pointer',
-                      width: '100%',
-                      transition: 'all 0.3s ease'
+                      width: '100%'
                     }}
-                    onMouseEnter={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}
-                    onMouseLeave={(e) => e.target.style.background = 'transparent'}
                   >
                     Remove Comparison
                   </button>
@@ -1077,7 +960,7 @@ function App() {
               {recommendation.recommendation.description}
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1.5rem' }}>
               <div style={{ 
                 background: 'var(--bg-elevated)', 
                 padding: '1.5rem', 
@@ -1088,9 +971,6 @@ function App() {
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>RSI</div>
                 <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-primary)' }}>
                   {recommendation.indicators.rsi.value.toFixed(2)}
-                </div>
-                <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                  {recommendation.indicators.rsi.signal}
                 </div>
               </div>
               <div style={{ 
@@ -1104,9 +984,6 @@ function App() {
                 <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-primary)' }}>
                   {recommendation.indicators.macd.macd.toFixed(2)}
                 </div>
-                <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                  {recommendation.indicators.macd.interpretation.signal}
-                </div>
               </div>
               <div style={{ 
                 background: 'var(--bg-elevated)', 
@@ -1119,59 +996,8 @@ function App() {
                 <div style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--text-primary)' }}>
                   {recommendation.indicators.trend.type}
                 </div>
-                <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                  {recommendation.indicators.trend.strength}
-                </div>
               </div>
             </div>
-
-            {recommendation.analysis.bullishSignals.length > 0 && (
-              <div style={{ marginBottom: '1.5rem' }}>
-                <h4 style={{ color: 'var(--profit)', marginBottom: '0.8rem', fontSize: '1.1rem' }}>✅ Bullish Signals</h4>
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                  {recommendation.analysis.bullishSignals.map((signal, idx) => (
-                    <li key={idx} style={{ 
-                      padding: '0.5rem 0', 
-                      color: 'var(--text-primary)',
-                      paddingLeft: '1.5rem',
-                      position: 'relative'
-                    }}>
-                      <span style={{ 
-                        position: 'absolute', 
-                        left: 0, 
-                        color: 'var(--profit)',
-                        fontWeight: '700'
-                      }}>•</span>
-                      {signal}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {recommendation.analysis.bearishSignals.length > 0 && (
-              <div>
-                <h4 style={{ color: 'var(--loss)', marginBottom: '0.8rem', fontSize: '1.1rem' }}>⚠️ Bearish Signals</h4>
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                  {recommendation.analysis.bearishSignals.map((signal, idx) => (
-                    <li key={idx} style={{ 
-                      padding: '0.5rem 0', 
-                      color: 'var(--text-primary)',
-                      paddingLeft: '1.5rem',
-                      position: 'relative'
-                    }}>
-                      <span style={{ 
-                        position: 'absolute', 
-                        left: 0, 
-                        color: 'var(--loss)',
-                        fontWeight: '700'
-                      }}>•</span>
-                      {signal}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </TiltCard>
         )}
       </main>
@@ -1188,7 +1014,7 @@ function App() {
           © 2025 Nexus Trading | Built by Valerie Dawson
         </p>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-          React • Node.js • MongoDB • Demo Mode (No API Limits)
+          React • Node.js • MongoDB • Alpha Vantage • Premium Design
         </p>
       </footer>
     </div>
