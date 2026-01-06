@@ -1,139 +1,139 @@
 # Nexus Trading Platform
 AI-powered stock analysis platform featuring real-time market data, technical indicators, and intelligent buy/sell recommendations with a premium dark luxury UI.
 # Live Demo
-Portfolio Showcase: https://nexustrading.vercel.app
-GitHub Repository: https://github.com/Rubysage20/stock-analysis-tool
-Backend API: https://stockanalysistool-production.up.railway.app
+* Portfolio Showcase: https://nexustrading.vercel.app
+* GitHub Repository: https://github.com/Rubysage20/stock-analysis-tool
+* Backend API: https://stockanalysistool-production.up.railway.app
 
 # Features
  Premium UI/UX
 
 * Custom Crosshair Cursor - Precision targeting mode for data analysis
 * 3D Tilt Cards - Interactive cards with holographic shimmer effects
-Particle Background - Animated floating particles creating depth
-Dark Luxury Theme - Unique Black/Gold/Emerald palette (not typical blue)
-Smooth Animations - Confetti celebrations, toast notifications, progressive loading
+* Particle Background - Animated floating particles creating depth
+* Dark Luxury Theme - Unique Black/Gold/Emerald palette (not typical blue)
+* Smooth Animations - Confetti celebrations, toast notifications, progressive loading
 
 # Market Analysis
 
-Live Ticker - Bloomberg-style scrolling ticker with sparklines
-Heat Map Visualization - Color-coded market overview showing performance at a glance
-Split-Screen Comparison - Compare two stocks side-by-side with different gradient charts
-Real-Time Quotes - Current prices, volume, daily changes
-30-Day Charts - Interactive area charts with gradient fills
+* Live Ticker - Bloomberg-style scrolling ticker with sparklines
+* Heat Map Visualization - Color-coded market overview showing performance at a glance
+* Split-Screen Comparison - Compare two stocks side-by-side with different gradient charts
+* Real-Time Quotes - Current prices, volume, daily changes
+* 30-Day Charts - Interactive area charts with gradient fills
 
 # AI-Powered Insights
 
-Smart Recommendations - BUY/SELL/HOLD signals based on multiple indicators
-Technical Analysis - RSI, MACD, Moving Averages (SMA 50/200)
-Bullish/Bearish Signals - Detailed breakdown of market indicators
-Confidence Scoring - AI analyzes 3+ indicators for recommendation strength
-
+* Smart Recommendations - BUY/SELL/HOLD signals based on multiple indicators
+* Technical Analysis - RSI, MACD, Moving Averages (SMA 50/200)
+* Bullish/Bearish Signals - Detailed breakdown of market indicators
+* Confidence Scoring - AI analyzes 3+ indicators for recommendation strength
+  
 # Portfolio Features
 
-Watchlist Management - Track favorite stocks with target prices
-Portfolio Tracking - Monitor investments with real-time P&L calculations
-Quick Access - One-click analysis from heat map or ticker
+* Watchlist Management - Track favorite stocks with target prices
+* Portfolio Tracking - Monitor investments with real-time P&L calculations
+* Quick Access - One-click analysis from heat map or ticker
 
 
 ## Tech Stack
-Frontend
+### Frontend
 
-React 18.0 - Modern component-based UI
-Recharts - Data visualization for charts
-Lucide React - Icon library
-Custom CSS - 800+ lines of advanced styling (3D transforms, animations, particles)
-Axios - HTTP client for API calls
+* React 18.0 - Modern component-based UI
+* Recharts - Data visualization for charts
+* Lucide React - Icon library
+* Custom CSS - 800+ lines of advanced styling (3D transforms, animations, particles)
+* Axios - HTTP client for API calls
 
-Backend
+### Backend
 
-Node.js + Express - RESTful API server
-MongoDB Atlas - Cloud database for watchlist and portfolio
-Mongoose - MongoDB object modeling
-Alpha Vantage API - Real-time stock market data
+* Node.js + Express - RESTful API server
+* MongoDB Atlas - Cloud database for watchlist and portfolio
+* Mongoose - MongoDB object modeling
+* Alpha Vantage API - Real-time stock market data
+ 
+### Deployment
 
-Deployment
-
-Frontend: Vercel (automatic deployments from GitHub)
-Backend: Railway (containerized Node.js deployment)
-Database: MongoDB Atlas (cloud cluster)
+* Frontend: Vercel (automatic deployments from GitHub)
+* Backend: Railway (containerized Node.js deployment)
+* Database: MongoDB Atlas (cloud cluster)
 
 
 ## Project Structure
-stock-analysis-tool/
-  backend/
-    routes/
-      stocks.js - Stock quote, chart, indicators endpoints
-      watchlist.js - Watchlist CRUD operations
-      portfolio.js - Portfolio tracking
-    services/
-      alphaVantageService.js - Alpha Vantage API integration
-      recommendationEngine.js - AI recommendation logic (RSI, MACD, SMA)
-    config/
-      db.js - MongoDB connection
-    models/
-      Watchlist.js - Watchlist schema
-      Portfolio.js - Portfolio schema
-    server.js - Express server
-    package.json
+* stock-analysis-tool/
+  * backend/
+    * routes/
+      * stocks.js - Stock quote, chart, indicators endpoints
+      * watchlist.js - Watchlist CRUD operations
+      * portfolio.js - Portfolio tracking
+    * services/
+      * alphaVantageService.js - Alpha Vantage API integration
+      * recommendationEngine.js - AI recommendation logic (RSI, MACD, SMA)
+   * config/
+     * db.js - MongoDB connection
+   * models/
+     * Watchlist.js - Watchlist schema
+     * Portfolio.js - Portfolio schema
+  * server.js - Express server
+  * package.json
   
-  frontend/
-    src/
-      App.js - Demo version (deployed)
-      App-LIVE.js - Live API version
-      App.css - Premium dark theme (800+ lines)
-      index.js - React entry point
-    public/
-      index.html
-    package.json
+ * frontend/
+ *   src/
+ *     App.js - Demo version (deployed)
+ *     App-LIVE.js - Live API version
+ *     App.css - Premium dark theme (800+ lines)
+ *     index.js - React entry point
+ *   public/
+ *      index.html
+ *   package.json
   
-  README.md
-  .gitignore
+*  README.md
+*  .gitignore
 
 ## Demo vs Live Versions
 This project includes two versions to balance portfolio showcase reliability with demonstrating real API integration:
-Demo Version (Deployed to Vercel)
+### Demo Version (Deployed to Vercel)
 
-File: frontend/src/App.js
-Live at: https://nexustrading.vercel.app
-Uses realistic test data to avoid API rate limits
-Perfect for portfolio showcase - works instantly, always available
-All features functional with zero delays
-Generates realistic technical indicators and recommendations
+* File: frontend/src/App.js
+* Live at: https://nexustrading.vercel.app
+* Uses realistic test data to avoid API rate limits
+* Perfect for portfolio showcase - works instantly, always available
+* All features functional with zero delays
+* Generates realistic technical indicators and recommendations
 
-Live Version (Full Integration)
+### Live Version (Full Integration)
 
-File: frontend/src/App-LIVE.js
-Connects to Railway backend: https://stockanalysistool-production.up.railway.app
-Real Alpha Vantage API integration for live market data
-Demonstrates full-stack deployment with external API
-Subject to API rate limits (5 calls/min, 500 calls/day)
-Progressive loading with 13-second delays to manage rate limits
+* File: frontend/src/App-LIVE.js
+* Connects to Railway backend: https://stockanalysistool-production.up.railway.app
+* Real Alpha Vantage API integration for live market data
+* Demonstrates full-stack deployment with external API
+* Subject to API rate limits (5 calls/min, 500 calls/day)
+* Progressive loading with 13-second delays to manage rate limits
 
 Why Both? The demo version ensures recruiters can explore all features without hitting rate limits, while the live integration code on GitHub proves production-ready API handling, error management, and deployment skills.
 
 ## Quick Start
-Prerequisites
+### Prerequisites
 
-Node.js (v14+)
-MongoDB Atlas account (free tier works)
-Alpha Vantage API key: https://www.alphavantage.co/support/#api-key
+* Node.js (v14+)
+* MongoDB Atlas account (free tier works)
+* Alpha Vantage API key: https://www.alphavantage.co/support/#api-key
 
-Backend Setup
-bashcd backend
-npm install
-Create .env file in backend/ folder:
-envPORT=5000
-MONGODB_URI=your_mongodb_connection_string
-ALPHA_VANTAGE_API_KEY=your_api_key
-Start backend server:
-bashnpm run dev
-Backend runs on: http://localhost:5000
-Frontend Setup
-bashcd frontend
-npm install
-npm start
-Frontend runs on: http://localhost:3000
+### Backend Setup
+* bashcd backend
+* npm install
+* Create .env file in backend/ folder:
+* envPORT=5000
+* MONGODB_URI=your_mongodb_connection_string
+* ALPHA_VANTAGE_API_KEY=your_api_key
+* Start backend server:
+* bashnpm run dev
+* Backend runs on: http://localhost:5000
+### Frontend Setup
+* bashcd frontend
+* npm install
+* npm start
+* Frontend runs on: http://localhost:3000
 
 ## API Endpoints
 Stock Data
