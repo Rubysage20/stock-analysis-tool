@@ -8,8 +8,8 @@ Backend API: https://stockanalysistool-production.up.railway.app
 # Features
  Premium UI/UX
 
-Custom Crosshair Cursor - Precision targeting mode for data analysis
-3D Tilt Cards - Interactive cards with holographic shimmer effects
+* Custom Crosshair Cursor - Precision targeting mode for data analysis
+* 3D Tilt Cards - Interactive cards with holographic shimmer effects
 Particle Background - Animated floating particles creating depth
 Dark Luxury Theme - Unique Black/Gold/Emerald palette (not typical blue)
 Smooth Animations - Confetti celebrations, toast notifications, progressive loading
